@@ -1,0 +1,26 @@
+{
+  "restaurantName": "Bella Cucina",
+  "tagline": "Where Every Meal Tells a Story",
+  "logoText": "BC",
+  "navLinks": [
+    { "label": "Home", "href": "#home" },
+    { "label": "Menu", "href": "#menu" },
+    { "label": "About", "href": "#about" },
+    { "label": "Contact", "href": "#contact" }
+  ],
+  "hero": {
+    "headline": "Experience the Art of Fine Dining",
+    "subtext": "Fresh ingredients, timeless recipes, and unforgettable flavors served with passion.",
+    "ctaLabel": "Explore Our Menu",
+    "ctaLink": "#menu"
+  },
+  "about": {
+    "heading": "Our Story",
+    "body": "Founded in 2015, Bella Cucina has been serving authentic cuisine crafted from the finest seasonal ingredients. Our chefs bring decades of culinary expertise to every dish, creating an experience that goes beyond a meal — it's a memory.",
+    "highlights": [
+      { "value": "9+", "label": "Years of Excellence" },
+      { "value": "120+", "label": "Dishes on Menu" },
+      { "value": "50K+", "label": "Happy Guests" }
+    ]
+  }
+}

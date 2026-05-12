@@ -1,0 +1,15 @@
+{
+  "address": "42 Spice Lane, Downtown, NY 10001",
+  "phone": "+1 (212) 555-0147",
+  "email": "hello@bellacucina.com",
+  "openingHours": [
+    { "days": "Monday – Friday", "hours": "11:00 AM – 10:00 PM" },
+    { "days": "Saturday – Sunday", "hours": "10:00 AM – 11:00 PM" }
+  ],
+  "socialLinks": [
+    { "platform": "Instagram", "icon": "instagram", "url": "#" },
+    { "platform": "Facebook", "icon": "facebook", "url": "#" },
+    { "platform": "Twitter", "icon": "twitter", "url": "#" }
+  ],
+  "copyright": "© 2024 Bella Cucina. All rights reserved."
+}

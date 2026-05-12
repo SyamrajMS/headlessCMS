@@ -1,0 +1,95 @@
+{
+  "categories": ["All", "Starters", "Mains", "Pasta", "Desserts", "Drinks"],
+  "items": [
+    {
+      "id": "p1",
+      "name": "Bruschetta al Pomodoro",
+      "description": "Toasted sourdough topped with vine-ripened tomatoes, fresh basil, garlic, and a drizzle of extra virgin olive oil.",
+      "price": "8.99",
+      "category": "Starters",
+      "image": "",
+      "badge": "Popular"
+    },
+    {
+      "id": "p2",
+      "name": "Arancini di Riso",
+      "description": "Golden fried risotto balls filled with mozzarella and ragù, served with a rich tomato dipping sauce.",
+      "price": "12.99",
+      "category": "Starters",
+      "image": "",
+      "badge": ""
+    },
+    {
+      "id": "p3",
+      "name": "Grilled Sea Bass",
+      "description": "Fresh Atlantic sea bass grilled to perfection, served with lemon butter sauce, capers, and roasted vegetables.",
+      "price": "32.99",
+      "category": "Mains",
+      "image": "",
+      "badge": "Chef's Choice"
+    },
+    {
+      "id": "p4",
+      "name": "Osso Buco alla Milanese",
+      "description": "Braised veal shanks slow-cooked in white wine and broth, served with saffron risotto and gremolata.",
+      "price": "38.99",
+      "category": "Mains",
+      "image": "",
+      "badge": ""
+    },
+    {
+      "id": "p5",
+      "name": "Tagliatelle al Tartufo",
+      "description": "Hand-rolled egg tagliatelle tossed in a rich truffle cream sauce with Parmigiano Reggiano and fresh black truffle.",
+      "price": "28.99",
+      "category": "Pasta",
+      "image": "",
+      "badge": "New"
+    },
+    {
+      "id": "p6",
+      "name": "Spaghetti alle Vongole",
+      "description": "Classic spaghetti with fresh Manila clams in a white wine, garlic, and parsley sauce.",
+      "price": "22.99",
+      "category": "Pasta",
+      "image": "",
+      "badge": ""
+    },
+    {
+      "id": "p7",
+      "name": "Tiramisu Classico",
+      "description": "The classic Italian dessert — layers of espresso-soaked ladyfingers and silky mascarpone cream, dusted with premium cocoa.",
+      "price": "9.99",
+      "category": "Desserts",
+      "image": "",
+      "badge": "Must Try"
+    },
+    {
+      "id": "p8",
+      "name": "Panna Cotta ai Frutti di Bosco",
+      "description": "Silky vanilla panna cotta topped with a vibrant mixed berry compote and fresh mint.",
+      "price": "8.99",
+      "category": "Desserts",
+      "image": "",
+      "badge": ""
+    },
+    {
+      "id": "p9",
+      "name": "Aperol Spritz",
+      "description": "The iconic Italian aperitif — Aperol, Prosecco, and soda water over ice with a fresh orange slice.",
+      "price": "13.99",
+      "category": "Drinks",
+      "image": "",
+      "badge": ""
+    },
+    {
+      "id": "p10",
+      "name": "Virgin Citrus Cooler",
+      "description": "A refreshing blend of freshly squeezed lemon, lime, orange juice, and sparkling water with mint.",
+      "price": "7.99",
+      "category": "Drinks",
+      "image": "",
+      "badge": ""
+    }
+  ]
+}

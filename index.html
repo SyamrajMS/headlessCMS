@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant</title>
+  <meta name="description" content="Fine dining restaurant — fresh ingredients, timeless recipes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080808; --surface: #111; --surface-2: #1a1a1a;
+      --border: rgba(255,255,255,0.07); --gold: #c9a84c; --gold-light: #e4c870;
+      --text: #f0ece4; --muted: #8a8480; --dim: #4a4642;
+      --radius: 12px; --nav-h: 72px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    /* ── Loader ── */
+    #loader { position: fixed; inset: 0; background: var(--bg); display: grid; place-items: center; z-index: 9999; transition: opacity .6s, visibility .6s; }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-ring { width: 48px; height: 48px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    /* ── Nav ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; transition: background .4s, backdrop-filter .4s, border-color .4s; border-bottom: 1px solid transparent; }
+    nav.scrolled { background: rgba(8,8,8,.85); backdrop-filter: blur(16px); border-color: var(--border); }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo { width: 38px; height: 38px; background: var(--gold); border-radius: 8px; display: grid; place-items: center; font-family: 'Playfair Display', serif; font-weight: 700; color: #080808; font-size: .95rem; }
+    .nav-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: .88rem; letter-spacing: .04em; transition: color .25s; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta { background: var(--gold); color: #080808; padding: 9px 22px; border-radius: 6px; font-size: .85rem; font-weight: 600; text-decoration: none; transition: background .25s, transform .2s; }
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; }
+    .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text); transition: .3s; }
+    /* ── Hero ── */
+    #home { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 5%; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,.12) 0%, transparent 70%), radial-gradient(ellipse 50% 80% at 80% 80%, rgba(100,60,20,.15) 0%, transparent 60%); }
+    .hero-noise { position: absolute; inset: 0; opacity: .04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px; }
+    .hero-content { position: relative; max-width: 760px; }
+    .hero-eyebrow { font-size: .78rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; opacity: 0; animation: fadeUp .8s .3s forwards; }
+    .hero-headline { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5.5vw, 4.2rem); line-height: 1.15; margin-bottom: 20px; opacity: 0; animation: fadeUp .8s .5s forwards; }
+    .hero-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 520px; margin: 0 auto 36px; opacity: 0; animation: fadeUp .8s .7s forwards; }
+    .hero-cta { display: inline-block; background: var(--gold); color: #080808; padding: 14px 36px; border-radius: 8px; font-weight: 600; text-decoration: none; letter-spacing: .03em; transition: background .25s, transform .2s, box-shadow .25s; opacity: 0; animation: fadeUp .8s .9s forwards; }
+    .hero-cta:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,.25); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    /* ── Section base ── */
+    section { padding: 96px 5%; }
+    .section-tag { font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 3.5vw, 2.8rem); margin-bottom: 20px; }
+    .divider { width: 48px; height: 2px; background: var(--gold); margin-bottom: 40px; }
+    /* ── About ── */
+    #about { background: var(--surface); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .about-text { color: var(--muted); line-height: 1.85; font-size: .97rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+    .stat-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; text-align: center; }
+    .stat-value { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); }
+    .stat-label { font-size: .78rem; color: var(--muted); margin-top: 6px; letter-spacing: .05em; }
+    /* ── Menu ── */
+    #menu { }
+    .menu-header { text-align: center; margin-bottom: 40px; }
+    .menu-header .divider { margin: 0 auto 40px; }
+    .filter-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 48px; }
+    .filter-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 8px 20px; border-radius: 100px; font-size: .83rem; cursor: pointer; transition: all .25s; font-family: 'Inter', sans-serif; }
+    .filter-btn:hover, .filter-btn.active { background: var(--gold); border-color: var(--gold); color: #080808; font-weight: 600; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+    .product-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform .3s, box-shadow .3s; opacity: 0; }
+    .product-card.visible { opacity: 1; }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,.5); }
+    .product-card.hidden { display: none; }
+    .card-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .card-img-placeholder { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background: linear-gradient(135deg, var(--surface-2), #1f1a14); }
+    .card-body { padding: 20px; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+    .card-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; line-height: 1.3; }
+    .card-badge { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; background: rgba(201,168,76,.15); color: var(--gold); border: 1px solid rgba(201,168,76,.3); white-space: nowrap; flex-shrink: 0; }
+    .card-desc { font-size: .83rem; color: var(--muted); line-height: 1.65; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-price { font-size: 1.1rem; font-weight: 600; color: var(--gold); }
+    /* ── Footer ── */
+    footer { background: var(--surface); border-top: 1px solid var(--border); padding: 64px 5% 32px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand .nav-name { font-size: 1.3rem; margin-bottom: 12px; display: block; }
+    .footer-tagline { font-size: .85rem; color: var(--muted); line-height: 1.7; max-width: 240px; margin-top: 8px; }
+    .footer-col h4 { font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .footer-col p, .footer-col a { font-size: .85rem; color: var(--muted); line-height: 1.9; text-decoration: none; display: block; transition: color .2s; }
+    .footer-col a:hover { color: var(--gold); }
+    .social-links { display: flex; gap: 12px; margin-top: 4px; }
+    .social-link { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 8px; display: grid; place-items: center; color: var(--muted); transition: all .25s; font-size: .75rem; text-decoration: none; }
+    .social-link:hover { border-color: var(--gold); color: var(--gold); }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-copy { font-size: .8rem; color: var(--dim); }
+    .footer-badge { font-size: .75rem; color: var(--dim); }
+    /* ── Scroll animation ── */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity .7s, transform .7s; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-toggle { display: flex; }
+      nav.open .nav-links { display: flex; flex-direction: column; position: absolute; top: var(--nav-h); left: 0; right: 0; background: rgba(8,8,8,.97); padding: 24px 5%; gap: 20px; backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-ring"></div></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-brand" href="#home">
+    <div class="nav-logo" id="nav-logo-text">BC</div>
+    <span class="nav-name" id="nav-restaurant-name">Bella Cucina</span>
+  </a>
+  <ul class="nav-links" id="nav-links"></ul>
+  <a class="nav-cta" href="#menu" id="nav-cta">View Menu</a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="hero-eyebrow">Fine Dining Experience</p>
+    <h1 class="hero-headline" id="hero-headline">Experience the Art of Fine Dining</h1>
+    <p class="hero-sub" id="hero-sub">Fresh ingredients, timeless recipes, and unforgettable flavors served with passion.</p>
+    <a class="hero-cta" id="hero-cta" href="#menu">Explore Our Menu</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <p class="section-tag reveal">Our Story</p>
+      <h2 class="section-title reveal" id="about-heading">Our Story</h2>
+      <div class="divider reveal"></div>
+      <p class="about-text reveal" id="about-body">Loading…</p>
+      <div class="stats-grid reveal" id="stats-grid"></div>
+    </div>
+    <div class="reveal" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);height:400px;display:grid;place-items:center;font-size:4rem;">🍽️</div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="menu-header">
+    <p class="section-tag reveal">What We Serve</p>
+    <h2 class="section-title reveal">Our Menu</h2>
+    <div class="divider reveal"></div>
+  </div>
+  <div class="filter-bar reveal" id="filter-bar"></div>
+  <div class="products-grid" id="products-grid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid" id="footer-grid">
+    <div class="footer-brand">
+      <span class="nav-name" id="footer-name">Bella Cucina</span>
+      <p class="footer-tagline" id="footer-tagline">Where Every Meal Tells a Story</p>
+    </div>
+    <div class="footer-col" id="footer-contact"></div>
+    <div class="footer-col" id="footer-hours"></div>
+    <div class="footer-col" id="footer-social"></div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy" id="footer-copy">© 2024 Bella Cucina. All rights reserved.</p>
+    <p class="footer-badge">Powered by GitHub CMS</p>
+  </div>
+</footer>
+
+<script>
+// ── CONFIG: auto-detect GitHub owner & repo from Pages URL ──
+function getGitHubConfig() {
+  const h = window.location.hostname;
+  if (h.endsWith('.github.io')) {
+    const owner = h.replace('.github.io', '');
+    const repo  = window.location.pathname.split('/').filter(Boolean)[0] || '';
+    return { owner, repo };
+  }
+  // Local dev fallback — change these if testing locally
+  return { owner: 'YOUR_GITHUB_USERNAME', repo: 'headlessCMS' };
+}
+
+const { owner, repo } = getGitHubConfig();
+const RAW = `https://raw.githubusercontent.com/${owner}/${repo}/main`;
+
+// ── Fetch helpers ──
+async function fetchJSON(path) {
+  const r = await fetch(`${RAW}/${path}?t=${Date.now()}`);
+  if (!r.ok) throw new Error(`Failed: ${path}`);
+  return r.json();
+}
+
+// ── Render Nav ──
+function renderNav(site) {
+  document.title = site.restaurantName;
+  document.querySelector('meta[name="description"]').content = site.tagline;
+  document.getElementById('nav-logo-text').textContent = site.logoText || site.restaurantName.slice(0,2).toUpperCase();
+  document.getElementById('nav-restaurant-name').textContent = site.restaurantName;
+  const ul = document.getElementById('nav-links');
+  ul.innerHTML = site.navLinks.map(l => `<li><a href="${l.href}">${l.label}</a></li>`).join('');
+  document.getElementById('nav-cta').textContent = site.hero.ctaLabel;
+  document.getElementById('nav-cta').href = site.hero.ctaLink;
+}
+
+// ── Render Hero ──
+function renderHero(site) {
+  document.getElementById('hero-eyebrow').textContent = site.restaurantName;
+  document.getElementById('hero-headline').textContent = site.hero.headline;
+  document.getElementById('hero-sub').textContent = site.hero.subtext;
+  const cta = document.getElementById('hero-cta');
+  cta.textContent = site.hero.ctaLabel;
+  cta.href = site.hero.ctaLink;
+}
+
+// ── Render About ──
+function renderAbout(site) {
+  document.getElementById('about-heading').textContent = site.about.heading;
+  document.getElementById('about-body').textContent = site.about.body;
+  const sg = document.getElementById('stats-grid');
+  sg.innerHTML = site.about.highlights.map(h =>
+    `<div class="stat-card"><div class="stat-value">${h.value}</div><div class="stat-label">${h.label}</div></div>`
+  ).join('');
+}
+
+// ── Render Products ──
+let allProducts = [];
+function renderProducts(data) {
+  allProducts = data.items;
+  // Filter bar
+  const fb = document.getElementById('filter-bar');
+  fb.innerHTML = data.categories.map((c, i) =>
+    `<button class="filter-btn ${i===0?'active':''}" data-cat="${c}">${c}</button>`
+  ).join('');
+  fb.addEventListener('click', e => {
+    if (!e.target.classList.contains('filter-btn')) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    filterProducts(e.target.dataset.cat);
+  });
+  buildCards(data.items);
+}
+
+function buildCards(items) {
+  const EMOJI = { Starters:'🥗', Mains:'🍖', Pasta:'🍝', Desserts:'🍮', Drinks:'🥂' };
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = items.map(p => {
+    const imgHTML = p.image
+      ? `<img class="card-img" src="${p.image.startsWith('images/') ? RAW+'/'+p.image : p.image}" alt="${p.name}" loading="lazy" />`
+      : `<div class="card-img-placeholder">${EMOJI[p.category] || '🍽️'}</div>`;
+    const badge = p.badge ? `<span class="card-badge">${p.badge}</span>` : '';
+    return `<div class="product-card" data-cat="${p.category}">
+      ${imgHTML}
+      <div class="card-body">
+        <div class="card-top"><span class="card-name">${p.name}</span>${badge}</div>
+        <p class="card-desc">${p.description}</p>
+        <span class="card-price">$${p.price}</span>
+      </div>
+    </div>`;
+  }).join('');
+  // Animate in
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.product-card').forEach((c, i) => {
+      setTimeout(() => c.classList.add('visible'), i * 60);
+    });
+  });
+}
+
+function filterProducts(cat) {
+  const items = cat === 'All' ? allProducts : allProducts.filter(p => p.category === cat);
+  buildCards(items);
+}
+
+// ── Render Footer ──
+function renderFooter(footer, site) {
+  document.getElementById('footer-name').textContent = site.restaurantName;
+  document.getElementById('footer-tagline').textContent = site.tagline;
+  document.getElementById('footer-copy').textContent = footer.copyright;
+
+  document.getElementById('footer-contact').innerHTML = `
+    <h4>Contact</h4>
+    <p>${footer.address}</p>
+    <a href="tel:${footer.phone}">${footer.phone}</a>
+    <a href="mailto:${footer.email}">${footer.email}</a>`;
+
+  document.getElementById('footer-hours').innerHTML = `
+    <h4>Hours</h4>
+    ${footer.openingHours.map(h => `<p><strong style="color:var(--text);font-weight:500">${h.days}</strong><br>${h.hours}</p>`).join('')}`;
+
+  const icons = { instagram:'IG', facebook:'FB', twitter:'TW' };
+  document.getElementById('footer-social').innerHTML = `
+    <h4>Follow Us</h4>
+    <div class="social-links">
+      ${footer.socialLinks.map(s => `<a class="social-link" href="${s.url}" target="_blank" rel="noopener" title="${s.platform}">${icons[s.icon]||s.platform.slice(0,2).toUpperCase()}</a>`).join('')}
+    </div>`;
+}
+
+// ── Scroll effects ──
+function initScroll() {
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60), { passive: true });
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ── Mobile nav toggle ──
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  document.getElementById('navbar').classList.toggle('open');
+});
+
+// ── Init ──
+async function init() {
+  try {
+    const [site, footer, products] = await Promise.all([
+      fetchJSON('content/site.json'),
+      fetchJSON('content/footer.json'),
+      fetchJSON('content/products.json'),
+    ]);
+    renderNav(site);
+    renderHero(site);
+    renderAbout(site);
+    renderProducts(products);
+    renderFooter(footer, site);
+  } catch (err) {
+    console.warn('Could not load CMS content:', err.message);
+  } finally {
+    document.getElementById('loader').classList.add('hidden');
+    initScroll();
+  }
+}
+init();
+</script>
+</body>
+</html>
