@@ -62,10 +62,25 @@ async function ghGet(path) {
 }
 
 async function ghPut(path, content, message) {
+  // Fetch current file SHA — needed by GitHub API to update existing files
   let sha;
-  try { const meta = await ghGet(path); sha = meta.sha; } catch(_) {}
-  const body = { message, content: btoa(unescape(encodeURIComponent(content))), ...(sha ? { sha } : {}) };
-  const r = await fetch(apiUrl(path), { method:'PUT', headers: headers(), body: JSON.stringify(body) });
+  const getResp = await fetch(apiUrl(path), { headers: headers() });
+  if (getResp.ok) {
+    const meta = await getResp.json();
+    sha = meta.sha; // file exists — use its SHA
+  } else if (getResp.status === 404) {
+    sha = undefined; // file doesn't exist yet — create it (no SHA needed)
+  } else {
+    // Any other status (401, 403, etc.) is a real error — surface it
+    const err = await getResp.json().catch(() => ({}));
+    throw new Error(`Could not read ${path}: ${err.message || getResp.status}`);
+  }
+  const body = {
+    message,
+    content: btoa(unescape(encodeURIComponent(content))),
+    ...(sha ? { sha } : {}),
+  };
+  const r = await fetch(apiUrl(path), { method: 'PUT', headers: headers(), body: JSON.stringify(body) });
   if (!r.ok) { const err = await r.json(); throw new Error(err.message || r.status); }
   return r.json();
 }
