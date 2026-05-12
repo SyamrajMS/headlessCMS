@@ -1,5 +1,12 @@
 {
-  "categories": ["All", "Starters", "Mains", "Pasta", "Desserts", "Drinks"],
+  "categories": [
+    "All",
+    "Starters",
+    "Mains",
+    "Pasta",
+    "Desserts",
+    "Drinks"
+  ],
   "items": [
     {
       "id": "p1",
