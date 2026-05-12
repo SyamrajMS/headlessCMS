@@ -334,11 +334,15 @@ async function publishAll() {
   id('publish-btn').disabled = true;
   id('publish-btn').textContent = '⏳ Publishing…';
   try {
-    await Promise.all([
-      ghPut('content/site.json',     JSON.stringify(siteData, null, 2),     'Update site.json via CMS'),
-      ghPut('content/footer.json',   JSON.stringify(footerData, null, 2),   'Update footer.json via CMS'),
-      ghPut('content/products.json', JSON.stringify(productsData, null, 2), 'Update products.json via CMS'),
-    ]);
+    // Sequential (not parallel) — each PUT fetches a fresh SHA right before committing
+    // Running them in parallel caused 409 SHA-mismatch errors
+    id('publish-btn').textContent = '⏳ Saving header…';
+    await ghPut('content/site.json',     JSON.stringify(siteData, null, 2),     'Update site.json via CMS');
+    id('publish-btn').textContent = '⏳ Saving footer…';
+    await ghPut('content/footer.json',   JSON.stringify(footerData, null, 2),   'Update footer.json via CMS');
+    id('publish-btn').textContent = '⏳ Saving products…';
+    await ghPut('content/products.json', JSON.stringify(productsData, null, 2), 'Update products.json via CMS');
+
     isDirty = false;
     id('publish-status').textContent = 'Published ✓';
     id('publish-status').className = 'publish-status saved';
